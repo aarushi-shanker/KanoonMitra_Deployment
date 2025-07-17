@@ -8,7 +8,6 @@ import path from 'path';
 import __dirname from './utils/getDirname.js';
 import lawyerRouter from './routes/lawyerRoutes.js';
 import modelRouter from './routes/modelRoutes.js';
-import path from 'path';
 
 //dotenv config
 dotenv.config();
