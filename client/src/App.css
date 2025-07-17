@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: samarkand;
+  src: url("../src/assets/SamarkanNormal-Gg5D.ttf");
+}
+
+.samarkand {
+  font-family: samarkand;
+}
+
+#loader {
+  margin-top: 32vh;
+}
+
+#fact {
+  color: #222222;
+  text-align: center;
+}
+
+#loadLogo {
+  width: 20vw;
+  text-align: center;
+}
+
+#factHead {
+  text-align: center;
+  font-family: "Arial";
+  font-weight: bold;
+}
+
+#logo {
+  margin-left: auto;
+  margin-right: auto;
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+}
+
+/* Keyframes for the "browse-in" animation */
+@keyframes slideInFromBottom {
+  0% {
+    transform: translateY(100px); /* Start farther down */
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0); /* End at its original position */
+    opacity: 1;
+  }
+}
+
+/* Animation when in view */
+.animate-in {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.animate-in.in-view {
+  animation: slideInFromBottom 1s ease-out forwards; /* Longer animation duration */
+}
