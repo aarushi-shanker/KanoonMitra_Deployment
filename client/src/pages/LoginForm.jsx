@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import UserBg from '../assets/bg.jpg';
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import axios from 'axios';
@@ -11,30 +11,36 @@ function LoginForm() {
   const [error, setError] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = {
-      email,
-      password
-    };
+    const formData = { email, password };
     try {
       const res = await axios.post('/api/v1/user/login', formData);
       if (res.data.success) {
         window.localStorage.setItem("token", res.data.token);
-        setError('')
-        navigate('/')
+        setError('');
+        navigate(from, { replace: true }); // redirection
       } else {
         setError(res.data.message);
       }
     } catch (error) {
-      setError(error.response.data.message);
+      setError(error.response?.data?.message || "Login failed");
     }
   };
+
 
   return (
     <div className="flex justify-center items-center min-h-screen">
