@@ -11,7 +11,7 @@ const ProtectedRoutes = ({ children }) => {
       <Navigate
         to="/login"
         state={{ from: location }}
-        replace={false} // important for back button to work
+        replace // important for back button to work
       />
     );
   }

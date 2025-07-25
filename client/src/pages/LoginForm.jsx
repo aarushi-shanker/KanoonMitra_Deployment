@@ -32,7 +32,7 @@ function LoginForm() {
       if (res.data.success) {
         window.localStorage.setItem("token", res.data.token);
         setError('');
-        navigate(from, { replace: true }); // redirection
+        navigate(from); // redirection
       } else {
         setError(res.data.message);
       }
