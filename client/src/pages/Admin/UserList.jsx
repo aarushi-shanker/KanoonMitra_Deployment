@@ -70,7 +70,7 @@ const UserList = () => {
                         </div>
                       </td>
                       <td className="tracking-wide text-left text-xs">
-                        {user.isAdmin === true ? 'Admin' : user.isLawyer === true ? 'Lawyer' : 'User'}
+                        {user.isAdmin === true ? 'Admin' : user?.isLawyer === true ? 'Lawyer' : 'User'}
                       </td>
                       {user.isAdmin === true ? '' :
                         <td className='flex justify-start align-center'>

@@ -89,7 +89,7 @@ const Appointments = () => {
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th className='tracking width text-left'>{user.isLawyer ? "Client's Name" : "Lawyer's Name"}</th>
+                                    <th className='tracking width text-left'>{user?.isLawyer ? "Client's Name" : "Lawyer's Name"}</th>
                                     <th className='tracking width text-left'>Email</th>
                                     <th className='tracking width text-left'>Appointment Date</th>
                                     <th className='tracking width text-left'>Appointment Time</th>
@@ -100,8 +100,8 @@ const Appointments = () => {
                                 {appointments.map((appointment, index) => (
                                     <tr key={index}>
                                         <td>{index + 1}</td>
-                                        <td>{user.isLawyer ? appointment.username : `${appointment.lawyerFname} ${appointment.lawyerLname}`}</td>
-                                        <td>{user.isLawyer ? appointment.userEmail : appointment.lawyerEmail}</td>
+                                        <td>{user?.isLawyer ? appointment.username : `${appointment.lawyerFname} ${appointment.lawyerLname}`}</td>
+                                        <td>{user?.isLawyer ? appointment.userEmail : appointment.lawyerEmail}</td>
                                         <td>
                                             {new Date(appointment.date).toLocaleDateString('en-GB', {
                                                 day: '2-digit',
@@ -116,7 +116,7 @@ const Appointments = () => {
                                             {currentDate > new Date(`${appointment.date}T${parseTimeTo24HourFormat(appointment.time)}`) ? 'Appointment Time Passed' :
                                                 appointment.status}
                                         </td>
-                                        { !(user.isLawyer || appointment.status === 'pending') && 
+                                        { !(user?.isLawyer || appointment.status === 'pending') && 
                                         <td>
                                             <p className='text-xs font-semibold'>
                                                 {(appointment.status === 'rejected' || (appointment.status === 'pending' && currentDate > new Date(`${appointment.date}T${parseTimeTo24HourFormat(appointment.time)}`))) ?
@@ -124,7 +124,7 @@ const Appointments = () => {
                                             </p>
                                         </td>
                                         }
-                                        <td>{user.isLawyer && appointment.status === 'pending' ? (
+                                        <td>{user?.isLawyer && appointment.status === 'pending' ? (
                                             <div className='flex gap-1'>
                                                 <button
                                                     onClick={() => handleStatus(appointment, 'approved')}
@@ -145,7 +145,7 @@ const Appointments = () => {
                         </table>
                         :
                         <div className='text-center w-full'>
-                            {!user.isLawyer ? <div className='flex flex-col justify-center items-center'>
+                            {!user?.isLawyer ? <div className='flex flex-col justify-center items-center'>
                                 <img src={emptyState} alt='' />
                                 <p className='text-center'>You have not booked any appointments till now</p>
                             </div> :
