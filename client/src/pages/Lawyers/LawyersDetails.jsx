@@ -60,7 +60,8 @@ const LawyersDetails = () => {
         window.location.href = res.data.url;
       }
     } catch (error) {
-      setBookingMsg("Could not book your Appointment! please try again later.");
+      console.log("Error booking appointment:", error);
+      setBookingMsg("Could not book your Appointment! please try again later.")
     }
   };
 
