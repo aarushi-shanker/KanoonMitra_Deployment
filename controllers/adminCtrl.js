@@ -51,8 +51,8 @@ const changeStatusController = async (req, res) => {
       message: `Your Lawyer Account ${status === 'removed'? '' : 'Request'} has been ${status}`,
     });
 
-    if ( status === "approved") user.isLawyer = true;
-    else user.isLawyer = false;
+    if ( status === "approved") user?.isLawyer = true;
+    else user?.isLawyer = false;
     await user.save();
     res.status(201).send({
       success: true,
