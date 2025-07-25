@@ -18,12 +18,6 @@ function LoginForm() {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/");
-    }
-  }, []);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = { email, password };
