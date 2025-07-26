@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import emptyState from '../assets/empty_state.png';
+import Pagination from '../components/CommonComponents/Pagination';
 
 const Appointments = () => {
     const [appointments, setAppointments] = useState([]);
     const { user } = useSelector(state => state.user);
     const currentDate = new Date();
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const limit = 5;
 
     const parseTimeTo24HourFormat = (time) => {
         const [timePart, modifier] = time.split(' ');
@@ -23,33 +27,40 @@ const Appointments = () => {
 
     const getUserAppointments = async () => {
         try {
-            const res = await axios.get('/api/v1/user/appointments', {
+            const res = await axios.get(`/api/v1/user/appointments?page=${page}&limit=${limit}`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("token")
                 }
             });
             if (res.data.success) {
                 setAppointments(res.data.data);
+                setTotalPages(res.data.totalPages);
             }
         } catch (error) {
             console.error(error);
         }
-    }
+    };
+
 
     const getLawyerAppointments = async () => {
         try {
-            const res = await axios.get('/api/v1/lawyer/appointments', {
+            const res = await axios.get(`/api/v1/lawyer/appointments?page=${page}&limit=${limit}`, {
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem("token")
                 }
             });
             if (res.data.success) {
                 setAppointments(res.data.data);
+                setTotalPages(res.data.totalPages);
             }
         } catch (error) {
             console.error(error);
         }
-    }
+    };
+
+    const handlePageChange = (page) => {
+        setPage(page);
+    };
 
     const handleStatus = async (record, status) => {
         try {
@@ -73,7 +84,7 @@ const Appointments = () => {
         } else {
             getUserAppointments();
         }
-    }, [user?.isLawyer])
+    }, [user?.isLawyer, page])
 
     return (
         <div className="min-h-screen lg:ms-4 md:pb-4 md:shadow-md bg-base-100">
@@ -116,13 +127,13 @@ const Appointments = () => {
                                             {currentDate > new Date(`${appointment.date}T${parseTimeTo24HourFormat(appointment.time)}`) ? 'Appointment Time Passed' :
                                                 appointment.status}
                                         </td>
-                                        { !(user?.isLawyer || appointment.status === 'pending') && 
-                                        <td>
-                                            <p className='text-xs font-semibold'>
-                                                {(appointment.status === 'rejected' || (appointment.status === 'pending' && currentDate > new Date(`${appointment.date}T${parseTimeTo24HourFormat(appointment.time)}`))) ?
-                                                    'Money Refunded' : 'Refund Not Applicable'}                                             
-                                            </p>
-                                        </td>
+                                        {!(user?.isLawyer || appointment.status === 'pending') &&
+                                            <td>
+                                                <p className='text-xs font-semibold'>
+                                                    {(appointment.status === 'rejected' || (appointment.status === 'pending' && currentDate > new Date(`${appointment.date}T${parseTimeTo24HourFormat(appointment.time)}`))) ?
+                                                        'Money Refunded' : 'Refund Not Applicable'}
+                                                </p>
+                                            </td>
                                         }
                                         <td>{user?.isLawyer && appointment.status === 'pending' ? (
                                             <div className='flex gap-1'>
@@ -157,6 +168,7 @@ const Appointments = () => {
                     }
                 </div>
             </div>
+            <Pagination currentPage={page} onPageChange={handlePageChange} totalPages={totalPages} />
         </div>
     )
 }

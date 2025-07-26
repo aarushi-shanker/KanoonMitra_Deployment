@@ -8,7 +8,7 @@ import __dirname from "../utils/getDirname.js";
 // Multer setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, 'uploads')); 
+    cb(null, path.join(__dirname, "uploads"));
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -39,7 +39,7 @@ const applyLawyerController = async (req, res) => {
         lawyerId: newLawyer._id,
         name: newLawyer.firstName + " " + newLawyer.lastName,
       },
-      onClickPath: '/lawyerList'
+      onClickPath: "/lawyerList",
     });
 
     await userModel.findByIdAndUpdate(adminUser._id, { notification });
@@ -61,7 +61,7 @@ const getLawyerInfoController = async (req, res) => {
     res.status(200).send({
       success: true,
       message: "lawyer data fetch success",
-      data: lawyer
+      data: lawyer,
     });
   } catch (error) {
     res
@@ -76,7 +76,7 @@ const updateProfileController = async (req, res) => {
     const { start, end, userId, ...rest } = req.body;
     const updateData = {
       ...rest,
-      timings: { start, end }
+      timings: { start, end },
     };
     if (profilePhoto) {
       updateData.profilePhoto = profilePhoto;
@@ -98,13 +98,13 @@ const updateProfileController = async (req, res) => {
     res.status(200).send({
       success: true,
       message: "Lawyer profile updated successfully.",
-      data: updatedLawyer
+      data: updatedLawyer,
     });
   } catch (error) {
     res.status(500).send({
       success: false,
       error,
-      message: "Failed to update lawyer."
+      message: "Failed to update lawyer.",
     });
   }
 };
@@ -115,39 +115,52 @@ const getLawyerByIdController = async (req, res) => {
     res.status(200).send({
       success: true,
       message: "lawyer data fetch success",
-      data: lawyer
+      data: lawyer,
     });
   } catch (error) {
     res
       .status(500)
       .send({ success: false, error, message: "Failed to fetch lawyer data." });
   }
-}
+};
 
 const lawyerAppointmentsController = async (req, res) => {
   try {
-    const lawyer= await lawyerModel.findOne({ userId: req.body.userId })
-    const appointments = await appointmentModel.find({
+    const { page = 1, limit = 10 } = req.query;
+    const lawyer = await lawyerModel.findOne({ userId: req.body.userId });
+
+    const totalAppointments = await appointmentModel.countDocuments({
       lawyerId: lawyer._id,
     });
+
+    const appointments = await appointmentModel
+      .find({ lawyerId: lawyer._id })
+      .sort({ date: -1 }) 
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
     res.status(200).send({
       message: "Appointments Fetched Successfully",
       success: true,
       data: appointments,
+      totalPages: Math.ceil(totalAppointments / limit),
     });
   } catch (error) {
     res.status(500).send({
       success: false,
-      message: "error in fetching appointments",
+      message: "Error in fetching appointments",
       error,
     });
   }
-}
+};
 
 const updateStatusController = async (req, res) => {
   try {
     const { appointmentId, status } = req.body;
-    const appointment = await appointmentModel.findByIdAndUpdate(appointmentId, { status });
+    const appointment = await appointmentModel.findByIdAndUpdate(
+      appointmentId,
+      { status }
+    );
     const user = await userModel.findOne({ _id: appointment.userId });
     if (!user) {
       return res
@@ -158,7 +171,7 @@ const updateStatusController = async (req, res) => {
     user.notification.push({
       type: "lawyer-appointment-request-updated",
       message: `Your Lawyer Appointment Request has been ${status}`,
-      onClickPath: '/Appointments-Page'
+      onClickPath: "/Appointments-Page",
     });
 
     await user.save();
@@ -173,7 +186,7 @@ const updateStatusController = async (req, res) => {
       error,
     });
   }
-}
+};
 
 export {
   applyLawyerController,
@@ -182,5 +195,5 @@ export {
   updateProfileController,
   getLawyerByIdController,
   lawyerAppointmentsController,
-  updateStatusController
+  updateStatusController,
 };

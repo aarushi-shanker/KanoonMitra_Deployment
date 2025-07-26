@@ -105,24 +105,18 @@ const getLawyersController = async (req, res) => {
 // Appointment booking
 const bookAppointmentController = async (req, res) => {
   try {
-    const lawyerInfo = req.body.lawyerInfo || {};
-    const userInfo = req.body.userInfo || {};
-    const date = req.body.date || "";
-    const time = req.body.time || "";
-
     const metadata = {
-      lawyerId: lawyerInfo._id?.toString() || "",
-      userId: userInfo._id?.toString() || "",
-      date: date.toString(),
-      time: time.toString(),
-      lawyerUID: lawyerInfo.userId?.toString() || "",
-      lawyerFname: lawyerInfo.firstName?.toString() || "",
-      lawyerLname: lawyerInfo.lastName?.toString() || "",
-      lawyerEmail: lawyerInfo.email?.toString() || "",
-      username: userInfo.username?.toString() || "",
-      userEmail: userInfo.email?.toString() || "",
+      lawyerId: req.body.lawyerInfo._id.toString(),
+      userId: req.body.userInfo._id.toString(),
+      date: req.body.date.toString(),
+      time: req.body.time.toString(),
+      lawyerUID: req.body.lawyerInfo.userId.toString(),
+      lawyerFname: req.body.lawyerInfo.firstName.toString(),
+      lawyerLname: req.body.lawyerInfo.lastName.toString(),
+      lawyerEmail: req.body.lawyerInfo.email.toString(),
+      username: req.body.userInfo.username.toString(),
+      userEmail: req.body.userInfo.email.toString(),
     };
-
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -130,9 +124,9 @@ const bookAppointmentController = async (req, res) => {
           price_data: {
             currency: "inr",
             product_data: {
-              name: `Consultation with ${metadata.lawyerFname} ${metadata.lawyerLname}`,
+              name: `Consultation with ${req.body.lawyerInfo.firstName} ${req.body.lawyerInfo.lastName}`,
             },
-            unit_amount: parseInt(lawyerInfo.feesConsultation) * 100,
+            unit_amount: req.body.lawyerInfo.feesConsultation * 100,
           },
           quantity: 1,
         },
@@ -148,7 +142,7 @@ const bookAppointmentController = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error while initiating payment",
-      error: error.message || error,
+      error,
     });
   }
 };
@@ -170,7 +164,6 @@ const paymentSuccessController = async (req, res) => {
         username,
         userEmail,
       } = session.metadata;
-
       const newAppointment = new appointmentModel({
         lawyerId,
         userId,
@@ -185,25 +178,27 @@ const paymentSuccessController = async (req, res) => {
       });
       await newAppointment.save();
 
-      const user = await userModel.findById(lawyerUID);
-      if (user) {
-        user.notification.push({
-          type: "New-appointment-request",
-          message: `You have received a new Appointment Request. Check it here!`,
-          onClickPath: "/Appointments-Page",
-        });
-        await user.save();
-      }
+      const user = await userModel.findOne({ _id: lawyerUID });
+      user.notification.push({
+        type: "New-appointment-request",
+        message: `You have received a new Appointment Request. Check it here!`,
+        onClickPath: "/Appointments-Page",
+      });
+      await user.save();
 
-      res.status(200).send({ success: true, message: "Appointment booked successfully." });
+      res
+        .status(200)
+        .send({ success: true, message: "Appointment booked successfully." });
     } else {
-      res.status(400).send({ success: false, message: "Payment not successful." });
+      res
+        .status(400)
+        .send({ success: false, message: "Payment not successful." });
     }
   } catch (error) {
     res.status(500).send({
       success: false,
       message: "Error handling payment success.",
-      error: error.message || error,
+      error,
     });
   }
 };
@@ -213,31 +208,49 @@ const bookingAvailabilityController = async (req, res) => {
     const date = req.body.date;
     const time = req.body.time;
     const lawyerId = req.body.lawyerId;
+    const bufferPeriodMs = 45 * 60 * 1000; // 45 minutes in milliseconds
 
-    const bufferPeriodMs = 45 * 60 * 1000; // 45 mins in ms
-
+    // Parse the requested time string
     const [requestedTimeString, requestedPeriod] = time.split(" ");
-    const [requestedHour, requestedMinute] = requestedTimeString.split(":").map(Number);
+    const [requestedHour, requestedMinute] = requestedTimeString
+      .split(":")
+      .map(Number);
+
     let requestedHour24 =
       requestedPeriod === "PM" && requestedHour !== 12
         ? requestedHour + 12
         : requestedHour;
-    requestedHour24 = requestedPeriod === "AM" && requestedHour === 12 ? 0 : requestedHour24;
+    requestedHour24 =
+      requestedPeriod === "AM" && requestedHour === 12 ? 0 : requestedHour24;
 
-    const requestedTimeMs = (requestedHour24 * 60 + requestedMinute) * 60 * 1000;
+    const requestedTimeMs =
+      (requestedHour24 * 60 + requestedMinute) * 60 * 1000;
 
-    const appointments = await appointmentModel.find({ lawyerId, date });
+    const appointments = await appointmentModel.find({
+      lawyerId,
+      date,
+    });
 
     for (const appointment of appointments) {
-      const [apptTimeString, apptPeriod] = appointment.time.split(" ");
-      const [apptHour, apptMinute] = apptTimeString.split(":").map(Number);
-      let apptHour24 =
-        apptPeriod === "PM" && apptHour !== 12 ? apptHour + 12 : apptHour;
-      apptHour24 = apptPeriod === "AM" && apptHour === 12 ? 0 : apptHour24;
+      const [appointmentTimeString, appointmentPeriod] =
+        appointment.time.split(" ");
+      const [appointmentHour, appointmentMinute] = appointmentTimeString
+        .split(":")
+        .map(Number);
 
-      const apptTimeMs = (apptHour24 * 60 + apptMinute) * 60 * 1000;
+      let appointmentHour24 =
+        appointmentPeriod === "PM" && appointmentHour !== 12
+          ? appointmentHour + 12
+          : appointmentHour;
+      appointmentHour24 =
+        appointmentPeriod === "AM" && appointmentHour === 12
+          ? 0
+          : appointmentHour24;
 
-      if (Math.abs(requestedTimeMs - apptTimeMs) < bufferPeriodMs) {
+      const appointmentTimeMs =
+        (appointmentHour24 * 60 + appointmentMinute) * 60 * 1000;
+
+      if (Math.abs(requestedTimeMs - appointmentTimeMs) < bufferPeriodMs) {
         return res.status(200).send({
           message: "Appointments not available at this time",
           success: false,
@@ -252,29 +265,40 @@ const bookingAvailabilityController = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       success: false,
-      message: "Error checking booking availability",
-      error: error.message || error,
+      message: "error in booking",
+      error,
     });
   }
 };
 
 const userAppointmentsController = async (req, res) => {
   try {
-    const appointments = await appointmentModel.find({ userId: req.body.userId });
+    const { page = 1, limit = 10 } = req.query;
+    const userId = req.body.userId;
+
+    const totalAppointments = await appointmentModel.countDocuments({ userId });
+
+    const appointments = await appointmentModel
+      .find({ userId })
+      .sort({ date: -1 }) 
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
     res.status(200).send({
       message: "Appointments Fetched Successfully",
       success: true,
       data: appointments,
+      totalPages: Math.ceil(totalAppointments / limit),
+      currentPage: Number(page),
     });
   } catch (error) {
     res.status(500).send({
       success: false,
-      message: "Error fetching appointments",
-      error: error.message || error,
+      message: "Error in fetching appointments",
+      error,
     });
   }
 };
-
 
 export {
   loginController,
