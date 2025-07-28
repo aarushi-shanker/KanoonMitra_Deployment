@@ -9,7 +9,7 @@ router.post("/bot-session", async (req, res) => {
   try {
     const { usermail, message, metadata } = req.body;
 
-    await logEvent("BOT", {
+    await logEvent("ASSISTANT", {
       usermail: usermail || "Anonymous",
       message: message || "Opened Assistant",
       metadata: metadata || {},      time: new Date(),

@@ -20,12 +20,12 @@ cron.schedule("0 8 * * 1", async () => {
 
     // 3. Bot Sessions
     const botLogs = await Log.countDocuments({
-      type: "BOT",
+      eventType: "ASSISTANT",
       timestamp: { $gte: oneWeekAgo },
     });
 
     const docLogs = await Log.countDocuments({
-      type: "DOCUMENT GENERATION",
+      eventType: "DOCUMENT GENERATION",
       timestamp: { $gte: oneWeekAgo },
     });
 

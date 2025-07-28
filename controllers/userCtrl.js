@@ -207,7 +207,6 @@ const paymentSuccessController = async (req, res) => {
           userId,
           lawyerId,
           paymentId,
-          time: new Date(),
         },
       });
 

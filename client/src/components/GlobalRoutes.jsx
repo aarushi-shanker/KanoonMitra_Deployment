@@ -21,6 +21,7 @@ import DocumentInput from '../pages/LegalFormats/DocumentInput'
 import PaymentSuccess from '../pages/Payments/PaymentSuccess'
 import PaymentCancel from '../pages/Payments/PaymentCancel'
 import { useSelector } from 'react-redux'
+import AppointmentsList from '../pages/Admin/AppointmentsList'
 
 function GlobalRoutes({ fullScreen }) {
   const { user } = useSelector(state => state.user);
@@ -59,6 +60,9 @@ function GlobalRoutes({ fullScreen }) {
           } />
           <Route path="/lawyers" element={
             <Lawyers />
+          } />
+          <Route path="/appointmentsList" element={
+            <AppointmentsList />
           } />
           <Route path="/lawyers/:id" element={
             <ProtectedRoutes>

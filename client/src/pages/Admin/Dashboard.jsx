@@ -33,11 +33,8 @@ const Dashboard = () => {
                 }
             });
             setStats(statsRes.data);
-            console.log(statsRes.data);
             setLogs(logsRes.data);
-            console.log(logsRes.data);
             setWeeklyAnalyticsData(weeklyAnalyticsRes.data.weeklyStats);
-            console.log(weeklyAnalyticsRes.data.weeklyStats);
         } catch (error) {
             console.error(error);
         }

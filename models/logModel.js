@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const logSchema = new mongoose.Schema({
   eventType: {
     type: String,
-    enum: ['LOGIN', 'REGISTER', 'APPOINTMENT', 'BOT', 'DOCUMENT GENERATION'],
+    enum: ['LOGIN', 'REGISTER', 'APPOINTMENT', 'ASSISTANT', 'DOCUMENT GENERATION'],
     required: true,
     index: true, 
   },

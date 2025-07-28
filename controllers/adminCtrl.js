@@ -114,7 +114,7 @@ const statsController = async (req, res) => {
     const totalUsers = await userModel.countDocuments();
     const totalLawyers = await userModel.countDocuments({ isLawyer: true });
     const totalAppointments = await appointmentModel.countDocuments();
-    const totalBotSessions = await Log.countDocuments({ eventType: "BOT" });
+    const totalBotSessions = await Log.countDocuments({ eventType: "ASSISTANT" });
     const totalDocGenerated = await Log.countDocuments({
       eventType: "DOCUMENT GENERATION",
     });
@@ -174,7 +174,7 @@ const getWeeklyAnalyticsController = async (req, res) => {
         createdAt: { $gte: start, $lte: end },
       });
       const botSessions = await Log.countDocuments({
-        eventType: "BOT",
+        eventType: "ASSISTANT",
         timestamp: { $gte: start, $lte: end },
       });
       const docGenerations = await Log.countDocuments({
