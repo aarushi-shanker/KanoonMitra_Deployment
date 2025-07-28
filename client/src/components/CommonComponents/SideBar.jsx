@@ -169,7 +169,24 @@ function SideBar() {
                       : "hover:bg-amber-400 p-1.5 block"
                 }
               >
-                <span className={`ml-2 inline`}>User List</span>
+                <span className={`ml-2 inline`}>Users List</span>
+              </NavLink>
+            }
+          </li>
+          <li className='text-xl mx-5'>
+            {user?.isAdmin &&
+              <NavLink
+                to='/appointmentsList'
+                onClick={() => handleClick('AppointmentsList')}
+                className={({ isActive, isPending }) =>
+                  isActive
+                    ? "bg-red-900 p-1.5 text-white active block"
+                    : isPending
+                      ? "pending"
+                      : "hover:bg-amber-400 p-1.5 block"
+                }
+              >
+                <span className={`ml-2 inline`}>Appointments List</span>
               </NavLink>
             }
           </li>

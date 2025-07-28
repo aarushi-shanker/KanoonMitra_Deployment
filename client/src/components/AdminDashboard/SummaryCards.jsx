@@ -19,6 +19,7 @@ const SummaryCards = ({ stats }) => {
     {
       title: "Appointments",
       value: safeStats.totalAppointments ?? "-",
+      path: "/appointmentsList",
     },
     {
       title: "Bot Sessions",

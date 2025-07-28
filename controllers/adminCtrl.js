@@ -37,6 +37,23 @@ const getAllLawyersController = async (req, res) => {
   }
 };
 
+const getAllAppointmentsController = async (req, res) => {
+  try {
+    const appointments = await appointmentModel.find({});
+    res.status(200).send({
+      success: true,
+      message: "appointments data",
+      data: appointments,
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "error while fetching appointments",
+      error,
+    });
+  }
+};
+
 const changeStatusController = async (req, res) => {
   try {
     const { lawyerId, status } = req.body;
@@ -184,6 +201,7 @@ const getWeeklyAnalyticsController = async (req, res) => {
 export {
   getAllUsersController,
   getAllLawyersController,
+  getAllAppointmentsController,
   changeStatusController,
   toggleBlockController,
   statsController,

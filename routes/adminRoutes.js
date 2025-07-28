@@ -4,6 +4,7 @@ import {
   changeStatusController,
   getAllLawyersController,
   getAllUsersController,
+  getAllAppointmentsController,
   toggleBlockController,
   statsController,
   logsController,
@@ -18,6 +19,7 @@ adminRouter.get("/logs", authMid, logsController);
 adminRouter.get("/analytics", authMid, getWeeklyAnalyticsController);
 adminRouter.get("/getAllUsers", authMid, getAllUsersController);
 adminRouter.get("/getAllLawyers", authMid, getAllLawyersController);
+adminRouter.get("/getAllAppointments", authMid, getAllAppointmentsController);
 
 //POST request route
 adminRouter.post("/changeStatus", authMid, changeStatusController);
