@@ -7,12 +7,12 @@ const SummaryCards = ({ stats }) => {
 
   const cards = [
     {
-      title: "Total Users Registered",
+      title: "Registered Users",
       value: safeStats.totalUsers ?? "-",
       path: "/userList",
     },
     {
-      title: "Total Lawyers",
+      title: "Registered Lawyers",
       value: safeStats.totalLawyers ?? "-",
       path: "/lawyerList",
     },

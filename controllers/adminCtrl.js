@@ -115,10 +115,10 @@ const statsController = async (req, res) => {
 
 const logsController = async (req, res) => {
   try {
-    const { type, startDate, endDate } = req.query;
+    const { eventType, startDate, endDate } = req.query;
     const filter = {};
 
-    if (type) filter.eventType = type;
+    if (eventType) filter.eventType = eventType;
     if (startDate || endDate) {
       filter.timestamp = {};
       if (startDate) filter.timestamp.$gte = new Date(startDate);
@@ -150,7 +150,7 @@ const getWeeklyAnalyticsController = async (req, res) => {
 
       const newUsers = await Log.countDocuments({
         eventType: "REGISTER",
-        createdAt: { $gte: start, $lte: end },
+        timestamp: { $gte: start, $lte: end },
       });
 
       const appointments = await appointmentModel.countDocuments({

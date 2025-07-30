@@ -1,7 +1,7 @@
 import React from "react";
 
 const LogTable = ({ logs }) => {
-  const isMetadataKey = (key) => ["metadata"].includes(key);
+  const isMetadataKey = (key) => ["userId", "metadata"].includes(key);
 
   return (
     <div className="bg-white shadow rounded-xl p-4 overflow-auto">
@@ -11,7 +11,8 @@ const LogTable = ({ logs }) => {
           <tr>
             <th className="px-4 py-2">Timestamp</th>
             <th className="px-4 py-2">Type</th>
-            <th className="px-4 py-2">Details</th>
+            <th className="px-4 py-2">User Details</th>
+            <th className="px-4 py-2">Event Details</th>
           </tr>
         </thead>
         <tbody>
