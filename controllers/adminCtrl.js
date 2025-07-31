@@ -112,7 +112,7 @@ const statsController = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Requested items not found" });
     }
-    res.json({
+    res.send({
       totalUsers,
       totalLawyers,
       totalAppointments,
@@ -142,7 +142,7 @@ const logsController = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Logs not found" });
     }
-    res.json(logs);
+    res.send(logs);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch logs" });
   }
@@ -193,7 +193,7 @@ const getWeeklyAnalyticsController = async (req, res) => {
       });
     }
 
-    res.json({ weeklyStats: last6Weeks });
+    res.send({ weeklyStats: last6Weeks });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch analytics." });
