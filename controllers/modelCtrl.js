@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import logEvent from "../utils/logEvents";
 
 dotenv.config();
 
@@ -60,7 +61,7 @@ const modelController = async (req, res) => {
     const clausesList = await generateClauses(selectedFormat, userClauses);
 
     //logging the document generation event
-    await logEvent("document generation", {
+    await logEvent("DOCUMENT GENERATION", {
       format: selectedFormat,
       time: new Date(),
     });

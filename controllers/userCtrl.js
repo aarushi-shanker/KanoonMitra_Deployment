@@ -33,7 +33,7 @@ const loginController = async (req, res) => {
     });
 
     //logging the login event
-    await logEvent("login", {
+    await logEvent("LOGIN", {
       userId: user._id,
       email: user.email,
       time: new Date(),
@@ -65,7 +65,7 @@ const registerController = async (req, res) => {
     await newUser.save();
 
     //logging the register event
-    await logEvent("register", {
+    await logEvent("REGISTER", {
       userId: newUser._id,
       email: newUser.email,
       username: newUser.username,
