@@ -6,6 +6,7 @@ const SummaryCards = ({ stats }) => {
     { title: "Total Lawyers", value: stats.totalLawyers },
     { title: "Appointments", value: stats.totalAppointments },
     { title: "Bot Sessions", value: stats.totalBotSessions },
+    { title: "Documents Generated", value: stats.totalDocGenerated },
   ];
 
   return (

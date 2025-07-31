@@ -31,12 +31,16 @@ const Dashboard = () => {
                 });
                 if (statsRes.data.success) {
                     setStats(statsRes.data);
+                    console.log(statsRes.data);
                 }
                 if (logsRes.data.success) {
                     setLogs(logsRes.data);
+                    console.log(statsRes.data);
                 }
                 if (logsRes.data.success) {
                     setWeeklyAnalyticsData(weeklyAnalyticsRes.data);
+                    console.log(statsRes.data);
+
                 }
             } catch (error) {
                 console.error(error);
@@ -48,7 +52,7 @@ const Dashboard = () => {
 
     return (
         <div className="p-6 space-y-6">
-            <h1 className="text-3xl font-bold text-white">Kanoon Mitra Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold">Kanoon Mitra Admin Dashboard</h1>
             <SummaryCards stats={stats} />
             <ActivityChart data={weeklyAnalyticsData} />
             <LogTable logs={logs} />
