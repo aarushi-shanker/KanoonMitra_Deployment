@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import logEvent from "../utils/logEvents";
+import logEvent from "../utils/logEvents.js";
 
 dotenv.config();
 
