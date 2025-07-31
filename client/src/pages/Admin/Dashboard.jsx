@@ -29,19 +29,12 @@ const Dashboard = () => {
                         'Cache-Control': 'no-cache'
                     }
                 });
-                if (statsRes.data) {
-                    setStats(statsRes);
-                    console.log(statsRes);
-                }
-                if (logsRes.data) {
-                    setLogs(logsRes.data);
+                    setStats(statsRes.data);
                     console.log(statsRes.data);
-                }
-                if (logsRes.data) {
+                    setLogs(logsRes.data);
+                    console.log(statsRes.data);             
                     setWeeklyAnalyticsData(weeklyAnalyticsRes.data);
                     console.log(statsRes.data);
-
-                }
             } catch (error) {
                 console.error(error);
             }
