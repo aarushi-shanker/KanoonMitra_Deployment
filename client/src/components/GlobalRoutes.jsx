@@ -30,7 +30,7 @@ function GlobalRoutes({ fullScreen }) {
         <Routes>
           <Route
             path="/"
-            element={user?.isAdmin ? <Home /> : <Dashboard />}
+            element={user?.isAdmin ?  <Dashboard /> : <Home />}
           />
 
           <Route path="/Assistant" element={
