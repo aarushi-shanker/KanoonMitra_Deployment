@@ -17,7 +17,7 @@ const LogTable = ({ logs }) => {
             <tr key={idx} className="border-t">
               <td className="px-4 py-2">{new Date(log.timestamp).toLocaleString()}</td>
               <td className="px-4 py-2">{log.type}</td>
-              <td className="px-4 py-2">{log.details.userId || "—"}</td>
+              <td className="px-4 py-2">{log.details.userId || "Unregistered User"}</td>
             </tr>
           ))}
         </tbody>

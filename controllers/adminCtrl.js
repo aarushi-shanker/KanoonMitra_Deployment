@@ -97,9 +97,9 @@ const statsController = async (req, res) => {
     const totalUsers = await userModel.countDocuments();
     const totalLawyers = await userModel.countDocuments({ isLawyer: true });
     const totalAppointments = await appointmentModel.countDocuments();
-    const totalBotSessions = await Log.countDocuments({ type: "BOT" });
+    const totalBotSessions = await Log.countDocuments({ eventType: "BOT" });
     const totalDocGenerated = await Log.countDocuments({
-      type: "DOCUMENT GENERATION",
+      eventType: "DOCUMENT GENERATION",
     });
     res.send({
       totalUsers,
@@ -118,7 +118,7 @@ const logsController = async (req, res) => {
     const { type, startDate, endDate } = req.query;
     const filter = {};
 
-    if (type) filter.type = type;
+    if (type) filter.eventType = type;
     if (startDate || endDate) {
       filter.timestamp = {};
       if (startDate) filter.timestamp.$gte = new Date(startDate);
@@ -148,7 +148,8 @@ const getWeeklyAnalyticsController = async (req, res) => {
         day: "numeric",
       })}–${end.toLocaleDateString("en-GB", { day: "numeric" })}`;
 
-      const newUsers = await userModel.countDocuments({
+      const newUsers = await Log.countDocuments({
+        eventType: "REGISTER",
         createdAt: { $gte: start, $lte: end },
       });
 
@@ -163,6 +164,7 @@ const getWeeklyAnalyticsController = async (req, res) => {
         eventType: "DOCUMENT GENERATION",
         timestamp: { $gte: start, $lte: end },
       });
+
       last6Weeks.unshift({
         week: weekLabel,
         newUsers,

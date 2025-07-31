@@ -49,6 +49,13 @@ const ActivityChart = ({ data }) => {
               name="Bot Sessions"
               strokeWidth={2}
             />
+            <Line
+              type="monotone"
+              dataKey="docGenerations"
+              stroke="#a91055ff"
+              name="Document Generations"
+              strokeWidth={2}
+            />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>
