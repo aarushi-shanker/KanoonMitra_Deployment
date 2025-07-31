@@ -35,9 +35,9 @@ const Dashboard = () => {
             setStats(statsRes.data);
             console.log(statsRes.data);
             setLogs(logsRes.data);
-            console.log(statsRes.data);
+            console.log(logsRes.data);
             setWeeklyAnalyticsData(weeklyAnalyticsRes.data);
-            console.log(statsRes.data);
+            console.log(weeklyAnalyticsRes.data);
         } catch (error) {
             console.error(error);
         }
