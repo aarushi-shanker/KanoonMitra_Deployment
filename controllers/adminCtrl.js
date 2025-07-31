@@ -101,17 +101,6 @@ const statsController = async (req, res) => {
     const totalDocGenerated = await Log.countDocuments({
       type: "DOCUMENT GENERATION",
     });
-    if (
-      !totalUsers ||
-      !totalLawyers ||
-      !totalAppointments ||
-      !totalBotSessions ||
-      !totalDocGenerated
-    ) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Requested items not found" });
-    }
     res.send({
       totalUsers,
       totalLawyers,
@@ -137,11 +126,6 @@ const logsController = async (req, res) => {
     }
 
     const logs = await Log.find(filter).sort({ timestamp: -1 }).limit(200);
-    if (!logs) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Logs not found" });
-    }
     res.send(logs);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch logs" });
@@ -179,11 +163,6 @@ const getWeeklyAnalyticsController = async (req, res) => {
         eventType: "DOCUMENT GENERATION",
         timestamp: { $gte: start, $lte: end },
       });
-      if (!newUsers || !appointments || !botSessions || !docGenerations) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Requested items not found" });
-      }
       last6Weeks.unshift({
         week: weekLabel,
         newUsers,
