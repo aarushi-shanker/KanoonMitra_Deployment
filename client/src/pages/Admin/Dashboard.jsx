@@ -11,19 +11,19 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const statsRes = await axios.get("/api/v1/admin/stats", {
+                const statsRes = await axios.get('/api/v1/admin/stats', {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token"),
                         'Cache-Control': 'no-cache'
                     }
                 });
-                const logsRes = await axios.get("/api/v1/admin/logs", {
+                const logsRes = await axios.get('/api/v1/admin/logs', {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token"),
                         'Cache-Control': 'no-cache'
                     }
                 });
-                const weeklyAnalyticsRes = await axios.get("/api/v1/admin/analytics", {
+                const weeklyAnalyticsRes = await axios.get('/api/v1/admin/analytics', {
                     headers: {
                         Authorization: "Bearer " + localStorage.getItem("token"),
                         'Cache-Control': 'no-cache'
@@ -45,11 +45,10 @@ const Dashboard = () => {
         fetchData();
     }, []);
 
-    if (!stats) return <p>Loading...</p>;
 
     return (
         <div className="p-6 space-y-6">
-            <h1 className="text-3xl font-bold">Kanoon Mitra Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold text-white">Kanoon Mitra Admin Dashboard</h1>
             <SummaryCards stats={stats} />
             <ActivityChart data={weeklyAnalyticsData} />
             <LogTable logs={logs} />
