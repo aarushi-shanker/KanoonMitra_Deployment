@@ -57,12 +57,13 @@ function SideBar() {
                     ? "pending"
                     : "hover:bg-amber-400 p-1.5 block"
               }
-              onClick={() => handleClick('Home')}
+              onClick={() => handleClick(user?.isAdmin ? 'Home': 'Dashboard')}
             >
-              <span className={`ml-2 inline`}>Home</span>
+              <span className={`ml-2 inline`}>{user?.isAdmin ? 'Home': 'Dashboard'}</span>
             </NavLink>
           </li>
           <li className='text-xl mx-5'>
+            {!(user?.isAdmin) &&
             <NavLink
               to='/legalFormats'
               className={({ isActive, isPending }) =>
@@ -75,9 +76,10 @@ function SideBar() {
               onClick={() => handleClick('Home')}
             >
               <span className={`ml-2 inline`}>Legal Formats</span>
-            </NavLink>
+            </NavLink>}
           </li>
           <li className='text-xl mx-5'>
+            {!(user?.isAdmin) &&
               <NavLink
                 to='/Appointments-Page'
                 onClick={() => handleClick('Appointments Page')}
@@ -90,9 +92,10 @@ function SideBar() {
                 }
               >
                 <span className={`ml-2 inline`}>Appointments</span>
-              </NavLink>
+              </NavLink>}
           </li>
           <li className='text-xl mx-5'>
+            {!(user?.isAdmin) &&
             <NavLink
               to='/lawyers'
               onClick={() => handleClick('Lawyers')}
@@ -105,7 +108,7 @@ function SideBar() {
               }
             >
               <span className={`ml-2 inline`}>Find Your Lawyer</span>
-            </NavLink>
+            </NavLink>}
           </li>
           <li className='text-xl mx-5'>
             {user?.isAdmin ?

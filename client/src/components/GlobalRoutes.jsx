@@ -1,6 +1,7 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from '../pages/Home'
+import Dashboard from '../pages/Admin/Dashboard'
 import LoginForm from '../pages/LoginForm'
 import RegisterForm from '../pages/Register'
 import ProtectedRoutes from './ProtectedRoutes'
@@ -19,16 +20,19 @@ import DocumentPage from '../pages/LegalFormats/DocumentPage'
 import DocumentInput from '../pages/LegalFormats/DocumentInput'
 import PaymentSuccess from '../pages/Payments/PaymentSuccess'
 import PaymentCancel from '../pages/Payments/PaymentCancel'
+import { useSelector } from 'react-redux'
 
 function GlobalRoutes({ fullScreen }) {
-
+  const { user } = useSelector(state => state.user);
   return (
     <div>
-      <main className={`${fullScreen ? '': 'pt-16 lg:ps-60'} text-sm min-h-screen`}>
+      <main className={`${fullScreen ? '' : 'pt-16 lg:ps-60'} text-sm min-h-screen`}>
         <Routes>
-          <Route path="/" element={
-            <Home />
-          } />
+          <Route
+            path="/"
+            element={user?.isAdmin ? <Home /> : <Dashboard />}
+          />
+
           <Route path="/Assistant" element={
             <Assistant />
           } />
@@ -62,8 +66,8 @@ function GlobalRoutes({ fullScreen }) {
             </ProtectedRoutes>
           } />
 
-          <Route path="/lawyer-appointment/payment/success" element={<PaymentSuccess /> } />
-          <Route path="/lawyer-appointment/payment/cancel" element={<PaymentCancel /> } />
+          <Route path="/lawyer-appointment/payment/success" element={<PaymentSuccess />} />
+          <Route path="/lawyer-appointment/payment/cancel" element={<PaymentCancel />} />
 
           <Route path="/lawyerApply" element={
             <ProtectedRoutes>

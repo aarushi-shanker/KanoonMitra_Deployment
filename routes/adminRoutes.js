@@ -5,11 +5,17 @@ import {
   getAllLawyersController,
   getAllUsersController,
   toggleBlockController,
+  statsController,
+  logsController,
+  getWeeklyAnalyticsController,
 } from "../controllers/adminCtrl.js";
 
 const adminRouter = express.Router();
 
 //GET request routes
+adminRouter.get("/stats", authMid, statsController);
+adminRouter.get("/logs", authMid, logsController);
+adminRouter.get("/analytics", authMid, getWeeklyAnalyticsController);
 adminRouter.get("/getAllUsers", authMid, getAllUsersController);
 adminRouter.get("/getAllLawyers", authMid, getAllLawyersController);
 
