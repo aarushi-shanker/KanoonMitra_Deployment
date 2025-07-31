@@ -9,39 +9,39 @@ const Dashboard = () => {
     const [logs, setLogs] = useState([]);
     const [weeklyAnalyticsData, setWeeklyAnalyticsData] = useState([]);
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const statsRes = await axios.get('/api/v1/admin/stats', {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token"),
-                        'Cache-Control': 'no-cache'
-                    }
-                });
-                const logsRes = await axios.get('/api/v1/admin/logs', {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token"),
-                        'Cache-Control': 'no-cache'
-                    }
-                });
-                const weeklyAnalyticsRes = await axios.get('/api/v1/admin/analytics', {
-                    headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token"),
-                        'Cache-Control': 'no-cache'
-                    }
-                });
-                setStats(statsRes.data);
-                console.log(statsRes.data);
-                setLogs(logsRes.data);
-                console.log(statsRes.data);
-                setWeeklyAnalyticsData(weeklyAnalyticsRes.data);
-                console.log(statsRes.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
         fetchData();
     }, []);
 
+    const fetchData = async () => {
+        try {
+            const statsRes = await axios.get('/api/v1/admin/stats', {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                    'Cache-Control': 'no-cache'
+                }
+            });
+            const logsRes = await axios.get('/api/v1/admin/logs', {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                    'Cache-Control': 'no-cache'
+                }
+            });
+            const weeklyAnalyticsRes = await axios.get('/api/v1/admin/analytics', {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                    'Cache-Control': 'no-cache'
+                }
+            });
+            setStats(statsRes.data);
+            console.log(statsRes.data);
+            setLogs(logsRes.data);
+            console.log(statsRes.data);
+            setWeeklyAnalyticsData(weeklyAnalyticsRes.data);
+            console.log(statsRes.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <div className="min-h-screen lg:ms-4 md:pb-4 md:shadow-md bg-base-100">
@@ -51,7 +51,7 @@ const Dashboard = () => {
                         Admin Dashboard
                     </h1>
                 </div>
-                <div className="px-4 py-2 lg:w-full overflow-x-auto mt-5">    
+                <div className="px-4 py-2 lg:w-full overflow-x-auto mt-5 gap-5 flex flex-col">
                     <SummaryCards stats={stats} />
                     <ActivityChart data={weeklyAnalyticsData} />
                     <LogTable logs={logs} />
