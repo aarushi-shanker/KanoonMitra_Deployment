@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import Stripe from "stripe";
-
+import logEvent from "../utils/logEvents.js";
 dotenv.config();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -31,6 +31,14 @@ const loginController = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
+
+    //logging the login event
+    await logEvent("login", {
+      userId: user._id,
+      email: user.email,
+      time: new Date(),
+    });
+
     res.status(200).send({ message: "Login Success", success: true, token });
   } catch (error) {
     console.error(`Error in Login: ${error.message}`);
@@ -55,6 +63,15 @@ const registerController = async (req, res) => {
 
     const newUser = new userModel(req.body);
     await newUser.save();
+
+    //logging the register event
+    await logEvent("register", {
+      userId: newUser._id,
+      email: newUser.email,
+      username: newUser.username,
+      time: new Date(),
+    });
+
     res.status(201).send({ message: "Registered Successfully", success: true });
   } catch (error) {
     console.error(`Register Controller Error: ${error.message}`);
@@ -186,6 +203,19 @@ const paymentSuccessController = async (req, res) => {
       });
       await user.save();
 
+      // Log event
+      await logEvent("APPOINTMENT", {
+        message: `Appointment booked with lawyer ${user.username}`,
+        metadata: {
+          userId,
+          lawyerId,
+          appointmentDate: date,
+          timeSlot: time,
+          paymentId,
+          status: "confirmed",
+        },
+      });
+
       res
         .status(200)
         .send({ success: true, message: "Appointment booked successfully." });
@@ -280,7 +310,7 @@ const userAppointmentsController = async (req, res) => {
 
     const appointments = await appointmentModel
       .find({ userId })
-      .sort({ date: -1 }) 
+      .sort({ date: -1 })
       .skip((page - 1) * limit)
       .limit(Number(limit));
 

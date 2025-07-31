@@ -8,6 +8,8 @@ import path from 'path';
 import __dirname from './utils/getDirname.js';
 import lawyerRouter from './routes/lawyerRoutes.js';
 import modelRouter from './routes/modelRoutes.js';
+import "./cron/weeklyReport.js";
+import logBot from "./routes/logBotRoutes.js";
 
 //dotenv config
 dotenv.config();
@@ -28,6 +30,7 @@ app.use('/api/v1/admin', adminRouter);
 app.use('/api/v1/lawyer', lawyerRouter);
 app.use('/api/v1/model', modelRouter);
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use('/api/logs', logBot);
 
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
 

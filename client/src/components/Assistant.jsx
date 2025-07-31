@@ -1,18 +1,42 @@
 import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const Assistant = () => {
+    const { user } = useSelector(state => state.user);
     useEffect(() => {
-        const injectScript = document.createElement('script');
-        injectScript.src = 'https://cdn.botpress.cloud/webchat/v1/inject.js';
+        const injectScript = document.createElement("script");
+        injectScript.src = "https://cdn.botpress.cloud/webchat/v1/inject.js";
         injectScript.async = true;
-        injectScript.setAttribute('data-botpress-container', 'botpress-assistant-container');
+        injectScript.setAttribute("data-botpress-container", "botpress-assistant-container");
         document.body.appendChild(injectScript);
 
-        const configScript = document.createElement('script');
-        configScript.src = 'https://mediafiles.botpress.cloud/fbfa8fda-98b2-4f6a-8fe5-84c03219fdd1/webchat/config.js';
+        const configScript = document.createElement("script");
+        configScript.src = "https://mediafiles.botpress.cloud/fbfa8fda-98b2-4f6a-8fe5-84c03219fdd1/webchat/config.js";
         configScript.defer = true;
-        configScript.setAttribute('data-botpress-container', 'botpress-assistant-container');
+        configScript.setAttribute("data-botpress-container", "botpress-assistant-container");
         document.body.appendChild(configScript);
+
+        // Log bot session
+        const logBotSession = async () => {
+            try {
+                await fetch("/api/logs/bot-session", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        usermail: user?.email || "Anonymous",
+                        message: "Opened Assistant",
+                        metadata: {
+                            userAgent: navigator.userAgent,
+                            referrer: document.referrer,
+                        },
+                    }),
+                });
+            } catch (err) {
+                console.error("Bot session logging failed", err);
+            }
+        };
+
+        logBotSession();
 
         return () => {
             document.body.removeChild(injectScript);
