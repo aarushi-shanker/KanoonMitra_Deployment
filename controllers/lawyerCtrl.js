@@ -4,6 +4,7 @@ import userModel from "../models/userModel.js";
 import appointmentModel from "../models/appointmentModel.js";
 import path from "path";
 import __dirname from "../utils/getDirname.js";
+import logEvent from "../utils/logEvents.js";
 
 // Multer setup
 const storage = multer.diskStorage({
@@ -175,6 +176,14 @@ const updateStatusController = async (req, res) => {
     });
 
     await user.save();
+
+    await logEvent("APPOINTMENT", {
+        message: `Status updated to ${status} for appointment booking with id ${appointmentId}`,
+        metadata: {
+          appointmentId,
+          time: new Date(),
+        },
+    });
     res.status(200).send({
       success: true,
       message: "Appointment Status Updated",

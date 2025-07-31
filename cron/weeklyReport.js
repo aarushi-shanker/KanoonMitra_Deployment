@@ -32,7 +32,7 @@ cron.schedule("0 8 * * 1", async () => {
     // 4. (Optional) Top Lawyers by appointment count
     const topLawyers = await Appointment.aggregate([
       { $match: { createdAt: { $gte: oneWeekAgo } } },
-      { $group: { _id: "$lawyerId", total: { $sum: 1 } } },
+      { $group: { _id: "$lawyerUId", total: { $sum: 1 } } },
       { $sort: { total: -1 } },
       { $limit: 3 },
       {

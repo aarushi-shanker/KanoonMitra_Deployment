@@ -35,7 +35,6 @@ const loginController = async (req, res) => {
     //logging the login event
     await logEvent("LOGIN", {
       userId: user._id,
-      email: user.email,
       time: new Date(),
     });
 
@@ -67,8 +66,6 @@ const registerController = async (req, res) => {
     //logging the register event
     await logEvent("REGISTER", {
       userId: newUser._id,
-      email: newUser.email,
-      username: newUser.username,
       time: new Date(),
     });
 
@@ -205,14 +202,12 @@ const paymentSuccessController = async (req, res) => {
 
       // Log event
       await logEvent("APPOINTMENT", {
-        message: `Appointment booked with lawyer ${user.username}`,
+        message: `Appointment booking initiated with lawyer ${lawyerUID} by user ${userId}`,
         metadata: {
           userId,
           lawyerId,
-          appointmentDate: date,
-          timeSlot: time,
           paymentId,
-          status: "confirmed",
+          time: new Date(),
         },
       });
 
