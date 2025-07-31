@@ -31,7 +31,7 @@ function SideBar() {
           {user?.username ?
             <li className='md:hidden ml-5'>
               <div className="flex items-center text-amber-700 px-2">
-                <Link to='/' onClick={() => handleClick('Home')} className='flex flex-row items-center gap-2 justify-center'>
+                <Link to='/' onClick={() => handleClick(user?.isAdmin ? 'Home': 'Dashboard')} className='flex flex-row items-center gap-2 justify-center'>
                   <figure >
                     
                   </figure>
@@ -57,9 +57,9 @@ function SideBar() {
                     ? "pending"
                     : "hover:bg-amber-400 p-1.5 block"
               }
-              onClick={() => handleClick(user?.isAdmin ? 'Home': 'Dashboard')}
+              onClick={() => handleClick(user?.isAdmin ? 'Dashboard' : 'Home')}
             >
-              <span className={`ml-2 inline`}>{user?.isAdmin ? 'Home': 'Dashboard'}</span>
+              <span className={`ml-2 inline`}>{user?.isAdmin ? 'Dashboard': 'Home'}</span>
             </NavLink>
           </li>
           <li className='text-xl mx-5'>
@@ -73,7 +73,7 @@ function SideBar() {
                     ? "pending"
                     : "hover:bg-amber-400 p-1.5 block"
               }
-              onClick={() => handleClick('Home')}
+              onClick={() => handleClick('LegalFormats')}
             >
               <span className={`ml-2 inline`}>Legal Formats</span>
             </NavLink>}
