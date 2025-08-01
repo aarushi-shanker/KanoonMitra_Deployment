@@ -46,7 +46,7 @@ async function generateClauses(selectedFormat, userClauses) {
 
   try {
     const result = await chatSession.sendMessage(
-      'You will generate complete professional document content in detail based on the given format and Clauses. Match the tone of the format and include points related to the given Clauses. Please provide a meaningful and coherent document based on the above input. Generate important clauses. Output should be like { "format" : selectedFormat , "clauses" : {\n"clause_heading": heading, "clause_content": clause content, "footer": footer}'
+      'You will generate complete professional document content in detail based on the given format and Clauses. Match the tone of the format. Please provide a meaningful and coherent document based on the above input. Generate important clauses. Output should be like { "format" : selectedFormat , "clauses" : {\n"clause_heading": heading, "clause_content": clause content, "footer": footer}'
     );
     return result.response.text();
   } catch (error) {

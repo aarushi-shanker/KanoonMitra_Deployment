@@ -23,7 +23,7 @@ const Assistant = () => {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        usermail: user?._id || "Unregistered User",
+                        userId: user?._id || "Unregistered User",
                         message: "Opened Assistant",
                         metadata: {
                             userAgent: navigator.userAgent,
