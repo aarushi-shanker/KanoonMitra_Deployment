@@ -29,12 +29,12 @@ const Dashboard = () => {
                         'Cache-Control': 'no-cache'
                     }
                 });
-                    setStats(statsRes.data);
-                    console.log(statsRes.data);
-                    setLogs(logsRes.data);
-                    console.log(statsRes.data);             
-                    setWeeklyAnalyticsData(weeklyAnalyticsRes.data);
-                    console.log(statsRes.data);
+                setStats(statsRes.data);
+                console.log(statsRes.data);
+                setLogs(logsRes.data);
+                console.log(statsRes.data);
+                setWeeklyAnalyticsData(weeklyAnalyticsRes.data);
+                console.log(statsRes.data);
             } catch (error) {
                 console.error(error);
             }
@@ -44,11 +44,19 @@ const Dashboard = () => {
 
 
     return (
-        <div className="p-6 space-y-6">
-            <h1 className="text-3xl font-bold">Kanoon Mitra Admin Dashboard</h1>
-            <SummaryCards stats={stats} />
-            <ActivityChart data={weeklyAnalyticsData} />
-            <LogTable logs={logs} />
+        <div className="min-h-screen lg:ms-4 md:pb-4 md:shadow-md bg-base-100">
+            <div className="hero-content flex flex-col">
+                <div className="bg-red-900 w-full">
+                    <h1 className='text-2xl font-bold text-center text-white p-2.5'>
+                        Admin Dashboard
+                    </h1>
+                </div>
+                <div className="px-4 py-2 lg:w-full overflow-x-auto mt-5">    
+                    <SummaryCards stats={stats} />
+                    <ActivityChart data={weeklyAnalyticsData} />
+                    <LogTable logs={logs} />
+                </div>
+            </div>
         </div>
     );
 };
