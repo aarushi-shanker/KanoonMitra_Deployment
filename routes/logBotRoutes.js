@@ -7,12 +7,12 @@ const router = express.Router();
 // Bot session logging route
 router.post("/bot-session", async (req, res) => {
   try {
-    const { usermail, message, metadata } = req.body;
+    const { userId, message, metadata } = req.body;
 
     await logEvent("ASSISTANT", {
-      usermail: usermail || "Anonymous",
+      userId: userId || "Unregistered User",
       message: message || "Opened Assistant",
-      metadata: metadata || {},      time: new Date(),
+      metadata: metadata || {},
     });
     
     res.status(201).json({ success: true, message: "Bot session logged" });

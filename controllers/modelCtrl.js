@@ -63,7 +63,6 @@ const modelController = async (req, res) => {
     //logging the document generation event
     await logEvent("DOCUMENT GENERATION", {
       format: selectedFormat,
-      time: new Date(),
     });
 
     res.status(200).send({

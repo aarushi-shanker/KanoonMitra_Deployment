@@ -35,7 +35,6 @@ const loginController = async (req, res) => {
     //logging the login event
     await logEvent("LOGIN", {
       userId: user._id,
-      time: new Date(),
     });
 
     res.status(200).send({ message: "Login Success", success: true, token });
@@ -66,7 +65,6 @@ const registerController = async (req, res) => {
     //logging the register event
     await logEvent("REGISTER", {
       userId: newUser._id,
-      time: new Date(),
     });
 
     res.status(201).send({ message: "Registered Successfully", success: true });
