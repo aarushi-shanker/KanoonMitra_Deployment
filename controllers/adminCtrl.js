@@ -12,6 +12,9 @@ const getAllUsersController = async (req, res) => {
       data: users,
     });
   } catch (error) {
+    await logEvent("ERROR", "ADMIN", {
+        message: `Users fetch failed. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       message: "error while fetching users",
@@ -29,6 +32,9 @@ const getAllLawyersController = async (req, res) => {
       data: lawyers,
     });
   } catch (error) {
+    await logEvent("ERROR", "ADMIN", {
+        message: `Lawyers fetch failed. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       message: "error while fetching lawyers",
@@ -46,6 +52,9 @@ const getAllAppointmentsController = async (req, res) => {
       data: appointments,
     });
   } catch (error) {
+    await logEvent("ERROR", "ADMIN", {
+        message: `Appointment fetch failed. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       message: "error while fetching appointments",
@@ -82,6 +91,9 @@ const changeStatusController = async (req, res) => {
       data: lawyer,
     });
   } catch (error) {
+    await logEvent("ERROR", "ADMIN", {
+        message: `Error in status change. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       message: "error in status change",
@@ -105,6 +117,9 @@ const toggleBlockController = async (req, res) => {
       message: `User ${user.isBlocked ? "blocked" : "unblocked"} successfully`,
     });
   } catch (error) {
+    await logEvent("ERROR", "ADMIN", {
+        message: `Error in blocking or unblocking a user. Error : ${error.message}`,
+    });
     res.status(500).send({ success: false, message: "Server Error", error });
   }
 };
@@ -126,6 +141,9 @@ const statsController = async (req, res) => {
       totalDocGenerated,
     });
   } catch (err) {
+    await logEvent("ERROR", "ADMIN", {
+        message: `Error in stats fetch. Error : ${err.message}`,
+    });
     res.status(500).json({ error: "Server error" });
   }
 };
@@ -145,6 +163,9 @@ const logsController = async (req, res) => {
     const logs = await Log.find(filter).sort({ timestamp: -1 }).limit(200);
     res.send(logs);
   } catch (err) {
+     await logEvent("ERROR", "ADMIN", {
+        message: `Error in logs fetch. Error : ${err.message}`,
+    });
     res.status(500).json({ error: "Failed to fetch logs" });
   }
 };
@@ -193,7 +214,9 @@ const getWeeklyAnalyticsController = async (req, res) => {
 
     res.send({ weeklyStats: last6Weeks });
   } catch (err) {
-    console.error(err);
+     await logEvent("ERROR", "ADMIN", {
+        message: `Error in analytics fetch. Error : ${err.message}`,
+    });
     res.status(500).json({ error: "Failed to fetch analytics." });
   }
 };

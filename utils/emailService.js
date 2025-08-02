@@ -18,6 +18,8 @@ export const sendEmail = async ({ to, subject, html }) => {
       html,
     });
   } catch (error) {
-    console.error("Error sending email:", error);
+    await logEvent("ERROR", "EMAIL", {
+      message: `Error sending email. Error : ${error.message}`,
+    });
   }
 };

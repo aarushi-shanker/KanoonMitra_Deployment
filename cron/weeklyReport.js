@@ -73,6 +73,9 @@ cron.schedule("0 8 * * 1", async () => {
     console.log("Weekly report sent successfully!");
 
   } catch (error) {
+    await logEvent("ERROR", "REPORT", {
+      message: `Error generating weekly report. Error : ${error.message}`,
+    });
     console.error("Error generating weekly report:", error);
   }
 });

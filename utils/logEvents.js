@@ -1,10 +1,12 @@
 import Log from "../models/logModel.js";
 
-const logEvent = async (eventType, details = {}) => {
+const logEvent = async (logType, eventType, details = {}) => {
   try {
-    await Log.create({ eventType, details });
+    await Log.create({ logType, eventType, details });
   } catch (err) {
-    console.error("Event logging failed:", err.message);
+    await logEvent("ERROR", "LOG", {
+      message: `Event logging failed. Error : ${err.message}`,
+    });
   }
 };
 

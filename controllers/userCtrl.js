@@ -33,13 +33,15 @@ const loginController = async (req, res) => {
     });
 
     //logging the login event
-    await logEvent("LOGIN", {
+    await logEvent("INFO", "LOGIN", {
       userId: user._id,
     });
 
     res.status(200).send({ message: "Login Success", success: true, token });
   } catch (error) {
-    console.error(`Error in Login: ${error.message}`);
+    await logEvent("ERROR", "LOGIN", {
+      message: `Error in Login. Error : ${error.message}`,
+    });
     res.status(500).send({ success: false, message: "Server Error" });
   }
 };
@@ -63,12 +65,15 @@ const registerController = async (req, res) => {
     await newUser.save();
 
     //logging the register event
-    await logEvent("REGISTER", {
+    await logEvent("INFO", "REGISTER", {
       userId: newUser._id,
     });
 
     res.status(201).send({ message: "Registered Successfully", success: true });
   } catch (error) {
+    await logEvent("ERROR", "REGISTER", {
+      message: `Error in Register. Error : ${error.message}`,
+    });
     console.error(`Register Controller Error: ${error.message}`);
     res.status(500).send({ success: false, message: "Server Error" });
   }
@@ -91,6 +96,9 @@ const authController = async (req, res) => {
       data: user,
     });
   } catch (error) {
+    await logEvent("ERROR", "AUTH", {
+      message: `Auth Error. Error : ${error.message}`,
+    });
     console.error(`Auth Error: ${error.message}`);
     res.status(500).send({ message: "Server Error", success: false });
   }
@@ -106,6 +114,9 @@ const getLawyersController = async (req, res) => {
       data: lawyers,
     });
   } catch (error) {
+    await logEvent("ERROR", "USER", {
+      message: `Error while fetching lawyers. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       message: "error while fetching lawyers",
@@ -151,6 +162,9 @@ const bookAppointmentController = async (req, res) => {
 
     res.status(200).send({ success: true, url: session.url });
   } catch (error) {
+    await logEvent("ERROR", "PAYMENT", {
+      message: `Error while initiating payment. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       message: "Error while initiating payment",
@@ -199,7 +213,7 @@ const paymentSuccessController = async (req, res) => {
       await user.save();
 
       // Log event
-      await logEvent("APPOINTMENT", {
+      await logEvent("INFO", "APPOINTMENT", {
         message: `Appointment booking initiated with lawyer ${lawyerUID} by user ${userId}`,
         metadata: {
           userId,
@@ -217,6 +231,9 @@ const paymentSuccessController = async (req, res) => {
         .send({ success: false, message: "Payment not successful." });
     }
   } catch (error) {
+    await logEvent("ERROR", "PAYMENT", {
+      message: `Error handling payment success. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       message: "Error handling payment success.",
@@ -285,6 +302,9 @@ const bookingAvailabilityController = async (req, res) => {
       success: true,
     });
   } catch (error) {
+    await logEvent("ERROR", "APPOINTMENT", {
+      message: `Error in booking. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       message: "error in booking",
@@ -314,6 +334,9 @@ const userAppointmentsController = async (req, res) => {
       currentPage: Number(page),
     });
   } catch (error) {
+    await logEvent("ERROR", "USER", {
+      message: `Error in fetching appointments. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       message: "Error in fetching appointments",

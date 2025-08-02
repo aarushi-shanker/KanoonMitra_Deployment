@@ -9,7 +9,7 @@ router.post("/bot-session", async (req, res) => {
   try {
     const { userId, message, metadata } = req.body;
 
-    await logEvent("ASSISTANT", {
+    await logEvent("INFO","ASSISTANT", {
       userId: userId || "Unregistered User",
       message: message || "Opened Assistant",
       metadata: metadata || {},
@@ -17,7 +17,9 @@ router.post("/bot-session", async (req, res) => {
     
     res.status(201).json({ success: true, message: "Bot session logged" });
   } catch (error) {
-    console.error("Logging failed:", error);
+    await logEvent("ERROR", "ASSISTANT", {
+      message: `Logging failed. Error : ${error.message}`,
+    });
     res.status(500).json({ success: false, error: error.message });
   }
 });

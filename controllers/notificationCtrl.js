@@ -14,6 +14,9 @@ const getAllNotificationController = async(req, res) => {
             data: updatedUser,
         })
     }catch(error) {
+        await logEvent("ERROR", "NOTIFICATION", {
+            message: `Error in notification. Error : ${error.message}`,
+        });
        res.status(500).send({
         message: 'Error in notification',
         success: false,
@@ -35,6 +38,9 @@ const deleteAllNotificationController = async(req, res) => {
             data: updatedUser,
         })
     } catch (error) {
+        await logEvent("ERROR", "NOTIFICATION", {
+            message: `Error to delete all notifications. Error : ${error.message}`,
+        });
         res.status(500).send({
             success: false,
             message: 'unable to delete all notifications',

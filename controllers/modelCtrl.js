@@ -50,6 +50,9 @@ async function generateClauses(selectedFormat, userClauses) {
     );
     return result.response.text();
   } catch (error) {
+    await logEvent("ERROR", "DOCUMENT GENERATION", {
+            message: `Error generating clauses. Error : ${error.message}`,
+        });
     console.error("Error generating clauses:", error);
   }
 }
@@ -61,7 +64,7 @@ const modelController = async (req, res) => {
     const clausesList = await generateClauses(selectedFormat, userClauses);
 
     //logging the document generation event
-    await logEvent("DOCUMENT GENERATION", {
+    await logEvent("INFO", "DOCUMENT GENERATION", {
       format: selectedFormat,
     });
 
@@ -71,6 +74,9 @@ const modelController = async (req, res) => {
       doc: clausesList,
     });
   } catch (error) {
+    await logEvent("ERROR", "DOCUMENT GENERATION", {
+            message: `Error generating clauses. Error : ${error.message}`,
+        });
     res
       .status(500)
       .send({

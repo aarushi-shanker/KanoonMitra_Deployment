@@ -3,9 +3,15 @@
 import mongoose from "mongoose";
 
 const logSchema = new mongoose.Schema({
+  logType: {
+    type: String,
+    enum: ['INFO', 'ERROR'],
+    required: true,
+    index: true, 
+  },
   eventType: {
     type: String,
-    enum: ['LOGIN', 'REGISTER', 'APPOINTMENT', 'ASSISTANT', 'DOCUMENT GENERATION'],
+    enum: ['DB', 'ADMIN', 'USER', 'AUTH', 'LAWYER', 'PAYMENT', 'LOGIN', 'REGISTER', 'APPOINTMENT', 'ASSISTANT', 'DOCUMENT GENERATION', 'REPORT', 'EMAIL', 'LOG'],
     required: true,
     index: true, 
   },

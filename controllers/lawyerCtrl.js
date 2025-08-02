@@ -50,6 +50,9 @@ const applyLawyerController = async (req, res) => {
       message: "Request for Lawyer Account successful.",
     });
   } catch (error) {
+    await logEvent("ERROR", "LAWYER", {
+        message: `Failed to register lawyer. Error : ${error.message}`,
+    });
     res
       .status(500)
       .send({ success: false, error, message: "Failed to register lawyer." });
@@ -65,6 +68,9 @@ const getLawyerInfoController = async (req, res) => {
       data: lawyer,
     });
   } catch (error) {
+    await logEvent("ERROR", "LAWYER", {
+        message: `Failed to fetch lawyer data. Error : ${error.message}`,
+    });
     res
       .status(500)
       .send({ success: false, error, message: "Failed to fetch lawyer data." });
@@ -102,6 +108,9 @@ const updateProfileController = async (req, res) => {
       data: updatedLawyer,
     });
   } catch (error) {
+    await logEvent("ERROR", "LAWYER", {
+        message: `Failed to update lawyer data. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       error,
@@ -119,6 +128,9 @@ const getLawyerByIdController = async (req, res) => {
       data: lawyer,
     });
   } catch (error) {
+    await logEvent("ERROR", "LAWYER", {
+        message: `Failed to fetch lawyer data by id. Error : ${error.message}`,
+    });
     res
       .status(500)
       .send({ success: false, error, message: "Failed to fetch lawyer data." });
@@ -147,6 +159,9 @@ const lawyerAppointmentsController = async (req, res) => {
       totalPages: Math.ceil(totalAppointments / limit),
     });
   } catch (error) {
+    await logEvent("ERROR", "LAWYER", {
+        message: `Failed to fetch lawyer appointments. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       message: "Error in fetching appointments",
@@ -177,18 +192,22 @@ const updateStatusController = async (req, res) => {
 
     await user.save();
 
-    await logEvent("APPOINTMENT", {
+    await logEvent("INFO", "APPOINTMENT", {
         message: `Status updated to ${status} for appointment booking with id ${appointmentId}`,
         metadata: {
           appointmentId,
           time: new Date(),
         },
     });
+
     res.status(200).send({
       success: true,
       message: "Appointment Status Updated",
     });
   } catch (error) {
+    await logEvent("ERROR", "LAWYER", {
+        message: `Failed status change. Error : ${error.message}`,
+    });
     res.status(500).send({
       success: false,
       message: "error in status change",
