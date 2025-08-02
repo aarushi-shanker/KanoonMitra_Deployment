@@ -10,7 +10,8 @@ const LogTable = ({ logs }) => {
         <thead className="bg-gray-100">
           <tr>
             <th className="px-4 py-2">Timestamp</th>
-            <th className="px-4 py-2">Type</th>
+            <th className="px-4 py-2">Log Type</th>
+            <th className="px-4 py-2">Event Type</th>
             <th className="px-4 py-2">User ID</th>
             <th className="px-4 py-2">Event Details</th>
           </tr>
@@ -18,10 +19,11 @@ const LogTable = ({ logs }) => {
         <tbody>
           {logs.map((log, idx) => (
             <tr key={idx} className="border-t">
-              <td className="px-4 py-2">{new Date(log.timestamp).toLocaleString()}</td>
-              <td className="px-4 py-2">{log.eventType}</td>
-              <td className="px-4 py-2">{log.details.userId || "Unregistered User"}</td>
-              <td className="px-4 py-2">
+              <td className={`px-4 py-2 ${log.logType === "ERROR" ? "text-red-500" : ""}`}>{new Date(log.timestamp).toLocaleString()}</td>
+              <td className={`px-4 py-2 ${log.logType === "ERROR" ? "text-red-500" : ""}`}>{log.logType}</td>
+              <td className={`px-4 py-2 ${log.logType === "ERROR" ? "text-red-500" : ""}`}>{log.eventType}</td>
+              <td className={`px-4 py-2 ${log.logType === "ERROR" ? "text-red-500" : ""}`}>{log.details.userId || "Unregistered User"}</td>
+              <td className={`px-4 py-2 ${log.logType === "ERROR" ? "text-red-500" : ""}`}>
                 <div className="space-y-1">
                   {Object.entries(log.details || {})
                     .filter(([key]) => !isMetadataKey(key)).length > 0 ? (
