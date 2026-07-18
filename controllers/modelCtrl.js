@@ -43,7 +43,7 @@ Return ONLY valid JSON in the following format:
 `;
 
     const result = await genAI.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       contents: prompt,
       config: generationConfig,
     });
