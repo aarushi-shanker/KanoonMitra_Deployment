@@ -1,16 +1,10 @@
 import dotenv from "dotenv";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import logEvent from "../utils/logEvents.js";
+import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
-const apiKey = process.env.GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(apiKey);
-
-const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
-  systemInstruction:
-    'You will generate complete professional document content in detail based on the given format. Match the tone of the format. Please provide a meaningful and coherent document based on the above input. Generate important clauses. Output should be like { "format" : selectedFormat , "clauses" : {\n"clause_heading": heading, "clause_content": clause content, "footer": footer}',
+const genAI = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
 });
 
 const generationConfig = {
@@ -22,38 +16,42 @@ const generationConfig = {
 };
 
 async function generateClauses(selectedFormat, userClauses) {
-  const chatSession = model.startChat({
-    generationConfig,
-    // safetySettings: Adjust safety settings
-    // See https://ai.google.dev/gemini-api/docs/safety-settings
-    history: [
-      {
-        role: "user",
-        parts: [
-          { text: `format: ${selectedFormat}, Clauses: ${userClauses}\n` },
-        ],
-      },
-      {
-        role: "model",
-        parts: [
-          {
-            text: '```json\n{"format": "agreement", "clauses": {"understanding": "This Agreement constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior or contemporaneous communications, representations, or agreements, whether oral or written. This Agreement may be amended only by a written instrument signed by both parties."}, "footer": "IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first written above."}\n\n```',
-          },
-        ],
-      },
-    ],
-  });
-
   try {
-    const result = await chatSession.sendMessage(
-      'You will generate complete professional document content in detail based on the given format and Clauses. Match the tone of the format. Please provide a meaningful and coherent document based on the above input. Generate important clauses. Output should be like { "format" : selectedFormat , "clauses" : {\n"clause_heading": heading, "clause_content": clause content, "footer": footer}'
-    );
-    return result.response.text();
+    const prompt = `
+System Instruction:
+You will generate complete professional document content in detail based on the given format.
+Match the tone of the format.
+Please provide a meaningful and coherent document based on the above input.
+Generate important clauses.
+
+Format:
+${selectedFormat}
+
+Clauses:
+${userClauses}
+
+Return ONLY valid JSON in the following format:
+
+{
+  "format": "${selectedFormat}",
+  "clauses": {
+    "clause_heading": "Heading",
+    "clause_content": "Clause Content"
+  },
+  "footer": "Footer"
+}
+`;
+
+    const result = await genAI.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: generationConfig,
+    });
+
+    return result.text;
   } catch (error) {
-    await logEvent("ERROR", "DOCUMENT GENERATION", {
-            message: `Error generating clauses. Error : ${error.message}`,
-        });
     console.error("Error generating clauses:", error);
+    throw error;
   }
 }
 
@@ -61,12 +59,10 @@ const modelController = async (req, res) => {
   const { selectedFormat, userClauses } = req.body;
 
   try {
-    const clausesList = await generateClauses(selectedFormat, userClauses);
-
-    //logging the document generation event
-    await logEvent("INFO", "DOCUMENT GENERATION", {
-      format: selectedFormat,
-    });
+    const clausesList = await generateClauses(
+      selectedFormat,
+      userClauses
+    );
 
     res.status(200).send({
       success: true,
@@ -74,16 +70,13 @@ const modelController = async (req, res) => {
       doc: clausesList,
     });
   } catch (error) {
-    await logEvent("ERROR", "DOCUMENT GENERATION", {
-            message: `Error generating clauses. Error : ${error.message}`,
-        });
-    res
-      .status(500)
-      .send({
-        success: false,
-        message: "Error generating clauses",
-        error: error.message,
-      });
+    console.error(error);
+
+    res.status(500).send({
+      success: false,
+      message: "Error generating clauses",
+      error: error.message,
+    });
   }
 };
 
