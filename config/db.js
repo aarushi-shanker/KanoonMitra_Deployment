@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import logEvent from "../utils/logEvents.js";
 
 const connectDB = async () => {
     try {
